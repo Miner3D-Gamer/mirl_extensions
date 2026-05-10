@@ -1,0 +1,88 @@
+[package]
+name = "mirl_extensions"
+version = "0.0.0-alpha"
+edition.workspace = true
+readme.workspace = true
+repository.workspace = true
+
+
+[features]
+default = ["std"]
+# Core
+std = ["ascii/std"]
+
+### Compatibility with ffi
+c_compatible = []
+
+# Supported crates
+### Mirl
+mirl_values = ["dep:mirl_values_core", "bigint", "bigfloat"]
+
+### Support for hashmap libs
+indexmap = ["dep:indexmap", "std", "mirl_extensions_core/indexmap"]
+dashmap = ["dep:dashmap", "std", "mirl_extensions_core/dashmap"]
+masstree = ["dep:masstree", "std", "mirl_extensions_core/masstree"]
+
+# Async
+tokio = ["dep:tokio"]
+
+glfw = ["dep:glfw", "dep:gl", "std"]
+
+bigint = ["dep:num-bigint", "dep:num-traits"]
+bigfloat = ["dep:num-bigfloat"]
+
+ascii = ["dep:ascii"]
+
+_checking = [
+    "indexmap",
+    "dashmap",
+    "masstree",
+    "tokio",
+    "glfw",
+    "bigint",
+    "bigfloat",
+    "mirl_values",
+    "ascii",
+]
+[dependencies]
+mirl_core = { version = "0.0.0-alpha" }
+mirl_extensions_core = { version = "0.0.0-alpha" }
+mirl_values_core = { version = "0.0.0-alpha", optional = true }
+
+# Crate support
+
+### GLFW
+glfw = { version = "0.51.0", optional = true }
+gl = { version = "0.14.0", optional = true }
+
+### Like a HashMap but it remembers in what order elements were inserted
+indexmap = { version = "2.13.0", optional = true, default-features = false, features = [
+    "std",
+] }
+### Like a HashMap but concurrent
+dashmap = { version = ">=6.1.0", optional = true, default-features = false }
+# ### Like dashmap but faster reading and slower writing
+# evmap = { version = ">=11.0.0", optional = true, default-features = false }
+### A concurrent indexmap
+masstree = { version = "0.9.2", optional = true, default-features = false }
+
+### Concurrency
+tokio = { version = "1.50.0", optional = true, features = ["sync"] }
+
+### Number crates
+num-bigint = { version = "0.4.2", optional = true }
+num-bigfloat = { version = "1.7", optional = true }
+num-traits = { version = "0.2.19", optional = true }
+
+### Text
+ascii = { version = "1.1.0", optional = true }
+
+[lints]
+workspace = true
+
+# TODO:
+# Add support for the following:
+# - num_bigint
+# - num_bigfloat
+[build-dependencies]
+mirl_build_tools = { workspace = true }
