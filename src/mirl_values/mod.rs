@@ -16,7 +16,7 @@ mod_and_pub_import!(conversion);
 pub trait InnerCodecValue:
     std::fmt::Debug + Clone + PartialEq + PartialOrd + Ord
 {
-    /// The type used inside of [`ContainerValue`], it should be you [Value] Wrapper
+    /// The type used inside of [`ContainerValue`], it should be you Value Wrapper
     type Inner: std::fmt::Debug + Clone + PartialEq + PartialOrd + Ord;
 }
 
@@ -71,7 +71,7 @@ impl CodecSimpleSubValueInto for SimpleValue {
 }
 /// Decompose a value by reference into its container variant.
 pub trait CodecContainerSubValueRef {
-    /// The [`InnerCodecValue`] for your [Value] wrapper
+    /// The [`InnerCodecValue`] for your Value wrapper
     type InnerValue: InnerCodecValue;
     /// Your wrapper as a container value
     fn as_container(
@@ -80,7 +80,7 @@ pub trait CodecContainerSubValueRef {
 }
 /// Decompose a value by reference into its container variant.
 pub trait CodecContainerSubValueRefMut {
-    /// The [`InnerCodecValue`] for your [Value] wrapper
+    /// The [`InnerCodecValue`] for your Value wrapper
     type InnerValue: InnerCodecValue;
     /// Your wrapper as a container value
     fn as_container_mut(
@@ -99,7 +99,7 @@ pub trait CodecContainerSubValueRefMut {
 
 /// Decompose a value by ownership into its simple or container variant.
 pub trait CodecContainerSubValueInto: Sized {
-    /// The [`InnerCodecValue`] for your [Value] wrapper
+    /// The [`InnerCodecValue`] for your Value wrapper
     type InnerValue: InnerCodecValue;
 
     /// Your wrapper as a container value

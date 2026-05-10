@@ -35,7 +35,7 @@ mirl_core::impl_empty_trait!(AutoImplTryFromPatch for u8, u16, u32, u64, u128, u
 //     }
 // }
 
-/// Implement a safe float to Option<Self> conversion
+/// Implement a safe float to `Option<Self>` conversion
 ///
 /// Usage:
 /// `impl_try_from_patch_float(float, int1, int2, int3)`

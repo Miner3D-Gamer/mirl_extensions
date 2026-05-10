@@ -10,6 +10,15 @@ repository.workspace = true
 default = ["std"]
 # Core
 std = ["ascii/std"]
+all = [
+    "mirl_values",
+    "indexmap",
+    "dashmap",
+    "masstree",
+    "tokio",
+    "glfw",
+    "ascii",
+]
 
 ### Compatibility with ffi
 c_compatible = []
@@ -39,8 +48,6 @@ _checking = [
     "masstree",
     "tokio",
     "glfw",
-    "bigint",
-    "bigfloat",
     "mirl_values",
     "ascii",
 ]
