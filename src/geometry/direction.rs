@@ -54,18 +54,18 @@ pub const trait ShapeDirectionType {
     fn none_directional() -> Self;
 }
 
-/// Check if the given direction is true in [`NormalDirections`](mirl_core::directions::NormalDirections)
+/// Check if the given direction is true in [`NormalDirections`](mirl_geometry_core::directions::NormalDirections)
 pub const trait IsDirectionTrue {
-    /// Check if the given direction is true in [`NormalDirections`](mirl_core::directions::NormalDirections)
+    /// Check if the given direction is true in [`NormalDirections`](mirl_geometry_core::directions::NormalDirections)
     fn is_direction_true(
         &self,
-        directions: &mirl_core::directions::NormalDirections,
+        directions: &mirl_geometry_core::directions::NormalDirections,
     ) -> bool;
 }
 impl const IsDirectionTrue for u8 {
     fn is_direction_true(
         &self,
-        directions: &mirl_core::directions::NormalDirections,
+        directions: &mirl_geometry_core::directions::NormalDirections,
     ) -> bool {
         match self {
             0 => directions.top_left,
@@ -82,10 +82,10 @@ impl const IsDirectionTrue for u8 {
 }
 
 // TODO: Add this trait to other directions
-impl const IsDirectionTrue for mirl_core::directions::Directions {
+impl const IsDirectionTrue for mirl_geometry_core::directions::Directions {
     fn is_direction_true(
         &self,
-        directions: &mirl_core::directions::NormalDirections,
+        directions: &mirl_geometry_core::directions::NormalDirections,
     ) -> bool {
         match self {
             Self::North => directions.top,
@@ -95,14 +95,14 @@ impl const IsDirectionTrue for mirl_core::directions::Directions {
         }
     }
 }
-/// Allow [`NormalDirections`](mirl_core::directions::NormalDirections) to itself check if a direction is true
+/// Allow [`NormalDirections`](mirl_geometry_core::directions::NormalDirections) to itself check if a direction is true
 pub const trait IsDirectionTrueForNormalDirection<T: IsDirectionTrue> {
     /// Is the given direction set to true for ourselves
     fn is_direction_true(&self, direction: &T) -> bool;
 }
 
 impl<T: [const] IsDirectionTrue> const IsDirectionTrueForNormalDirection<T>
-    for mirl_core::directions::NormalDirections
+    for mirl_geometry_core::directions::NormalDirections
 {
     fn is_direction_true(&self, direction: &T) -> bool {
         direction.is_direction_true(self)

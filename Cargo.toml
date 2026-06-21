@@ -2,22 +2,23 @@
 name = "mirl_extensions"
 version = "0.0.0-alpha"
 edition.workspace = true
-readme.workspace = true
 repository.workspace = true
 
 
 [features]
 default = ["std"]
+std = ["mirl_core/std", "mirl_extensions_conversion/std"]
 # Core
-std = ["ascii/std"]
 all = [
     "mirl_values",
     "indexmap",
     "dashmap",
     "masstree",
     "tokio",
-    "glfw",
     "ascii",
+    "mirl_graphics",
+    "mirl_input",
+    "mirl_collections",
 ]
 
 ### Compatibility with ffi
@@ -25,42 +26,83 @@ c_compatible = []
 
 # Supported crates
 ### Mirl
-mirl_values = ["dep:mirl_values_core", "bigint", "bigfloat"]
+mirl_values = [
+    "dep:mirl_values_core",
+    "bigint",
+    "bigfloat",
+    "mirl_extensions_conversion/mirl_values",
+]
+mirl_collections = ["dep:mirl_collections"]
+mirl_graphics = ["dep:mirl_graphics"]
+mirl_input = ["dep:mirl_input"]
+mirl_geometry = ["dep:mirl_geometry_core"]
 
 ### Support for hashmap libs
-indexmap = ["dep:indexmap", "std", "mirl_extensions_core/indexmap"]
-dashmap = ["dep:dashmap", "std", "mirl_extensions_core/dashmap"]
-masstree = ["dep:masstree", "std", "mirl_extensions_core/masstree"]
+indexmap = [
+    "dep:indexmap",
+    "std",
+    "mirl_extensions_core/indexmap",
+    "mirl_extensions_conversion/indexmap",
+]
+dashmap = [
+    "dep:dashmap",
+    "std",
+    "mirl_extensions_core/dashmap",
+    "mirl_extensions_conversion/dashmap",
+]
+masstree = [
+    "dep:masstree",
+    "std",
+    "mirl_extensions_core/masstree",
+    "mirl_extensions_conversion/masstree",
+]
 
 # Async
-tokio = ["dep:tokio"]
+tokio = ["dep:tokio", "mirl_extensions_conversion/tokio"]
 
-glfw = ["dep:glfw", "dep:gl", "std"]
+glfw = ["mirl_extensions_conversion/glfw"]
 
-bigint = ["dep:num-bigint", "dep:num-traits"]
-bigfloat = ["dep:num-bigfloat"]
+bigfloat = [
+    "dep:num-bigfloat",
+    "mirl_extensions_conversion/bigfloat",
+    "mirl_extensions_math/bigfloat",
+]
+bigint = [
+    "dep:num-bigint",
+    "dep:num-traits",
+    "mirl_extensions_conversion/bigint",
+    "mirl_extensions_math/bigint",
+]
 
-ascii = ["dep:ascii"]
+ascii = ["mirl_extensions_conversion/ascii"]
 
 _checking = [
     "indexmap",
     "dashmap",
     "masstree",
     "tokio",
-    "glfw",
     "mirl_values",
     "ascii",
+    "mirl_graphics",
+    "mirl_input",
+    "mirl_collections",
+    "mirl_geometry",
 ]
 [dependencies]
 mirl_core = { version = "0.0.0-alpha" }
 mirl_extensions_core = { version = "0.0.0-alpha" }
+mirl_extensions_math = { version = "0.0.0-alpha" }
+mirl_extensions_conversion = { version = "0.0.0-alpha" }
+mirl_buffer = { version = "0.0.0-alpha" }
 mirl_values_core = { version = "0.0.0-alpha", optional = true }
+
+mirl_collections = { version = "0.0.0-alpha", optional = true }
+mirl_graphics = { version = "0.0.0-alpha", optional = true }
+mirl_input = { version = "0.0.0-alpha", optional = true }
+mirl_geometry_core = { version = "0.0.0-alpha", optional = true }
 
 # Crate support
 
-### GLFW
-glfw = { version = "0.51.0", optional = true }
-gl = { version = "0.14.0", optional = true }
 
 ### Like a HashMap but it remembers in what order elements were inserted
 indexmap = { version = "2.13.0", optional = true, default-features = false, features = [
@@ -81,15 +123,10 @@ num-bigint = { version = "0.4.2", optional = true }
 num-bigfloat = { version = "1.7", optional = true }
 num-traits = { version = "0.2.19", optional = true }
 
-### Text
-ascii = { version = "1.1.0", optional = true }
 
 [lints]
 workspace = true
 
-# TODO:
-# Add support for the following:
-# - num_bigint
-# - num_bigfloat
+
 [build-dependencies]
 mirl_build_tools = { workspace = true }

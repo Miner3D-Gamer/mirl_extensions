@@ -1,3 +1,5 @@
+use mirl_extensions_core::IsNumberType;
+
 /// Obtain the 2d coordinate at which the object is located
 pub const trait Get2DCoordinate<T> {
     #[must_use]
@@ -32,8 +34,14 @@ impl<T: Get2DCoordinate<N>, N> Get2DCoordinateHelper<N> for T {
 pub const trait Get2DCoordinateCenter<T> {
     #[must_use]
     /// Obtain the 2d coordinate at which the middle of the object is located
-    fn get_pos_2d_of_center(&self) -> (T, T);
+    fn get_pos_2d_of_center(&self) -> &(T, T);
 }
+impl<T: IsNumberType> Get2DCoordinateCenter<T> for (T, T) {
+    fn get_pos_2d_of_center(&self) -> &(T, T) {
+        self
+    }
+}
+
 /// In what direction if the other point relative to this one
 pub const trait Directions2DFromTo<T, N> {
     /// In what direction if the other point relative to this one
@@ -41,9 +49,9 @@ pub const trait Directions2DFromTo<T, N> {
         &self,
         other: T,
         target_ratio: N,
-    ) -> mirl_core::directions::Directions;
+    ) -> mirl_geometry_core::directions::Directions;
 }
-impl<
+const impl<
     S: [const] Get2DCoordinateCenter<N>,
     T: [const] Get2DCoordinateCenter<N>,
     N: [const] core::ops::Sub<Output = N>
@@ -52,13 +60,13 @@ impl<
         + [const] crate::Abs
         + [const] core::ops::Mul<Output = N>
         + Copy,
-> const Directions2DFromTo<&T, N> for S
+> Directions2DFromTo<&T, N> for S
 {
     default fn get_direction_relative_to<const CS: bool>(
         &self,
         other: &T,
         target_ratio: N,
-    ) -> mirl_core::directions::Directions {
+    ) -> mirl_geometry_core::directions::Directions {
         let current = self.get_pos_2d_of_center();
         let target = other.get_pos_2d_of_center();
         let margin_x = target.0 - current.0;
@@ -66,14 +74,14 @@ impl<
 
         if margin_y.abs() > margin_x.abs() * target_ratio {
             if (CS && margin_y > N::ZERO) || (!CS && margin_y < N::ZERO) {
-                mirl_core::directions::Directions::North
+                mirl_geometry_core::directions::Directions::North
             } else {
-                mirl_core::directions::Directions::South
+                mirl_geometry_core::directions::Directions::South
             }
         } else if margin_x > N::ZERO {
-            mirl_core::directions::Directions::East
+            mirl_geometry_core::directions::Directions::East
         } else {
-            mirl_core::directions::Directions::West
+            mirl_geometry_core::directions::Directions::West
         }
     }
 }

@@ -10,7 +10,7 @@ use crate::{TryFromPatch, mod_and_pub_import};
 mod_and_pub_import!(conversion);
 
 // TODO: Auto impl some of these when Deref to Value is implemented
-// TODO: Merge the Conainer + Simple + Super trait
+// TODO: Merge the container + Simple + Super trait
 
 /// What value should be used inside of [`ContainerValue`]
 pub trait InnerCodecValue:

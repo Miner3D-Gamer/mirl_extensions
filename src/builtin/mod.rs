@@ -51,28 +51,28 @@ impl<T: Default> SetToDefault for T {
     }
 }
 /// A trait for quickly printing to console by just calling [`.println_self()`](LogToConsole::println_self) instead of [`println!("{:?}", self)`](std::println)
-pub const trait LogToConsole: LogToConsoleHelper {
+pub trait LogToConsole: core::fmt::Debug {
     /// Equivalent to println!("{self:?}")
     fn println_self(&self);
     /// Equivalent to print!("{self:?}")
     fn print_self(&self);
-}
-/// A helper trait for [`LogToConsole`] which automatically implements prefix and suffix functions
-pub const trait LogToConsoleHelper {
     /// Print the given value with a prefix
-    fn println_self_prefixed(&self, prefix: &str);
-    /// Print the given value with a suffix
-    fn println_self_suffixed(&self, suffix: &str);
-}
-#[cfg(feature = "std")]
-impl<T: LogToConsole + core::fmt::Debug> LogToConsoleHelper for T {
     fn println_self_prefixed(&self, prefix: &str) {
         String::println_self(&format!("{prefix}{self:?}"));
     }
+    /// Print the given value with a suffix
     fn println_self_suffixed(&self, suffix: &str) {
         String::println_self(&format!("{self:?}{suffix}"));
     }
 }
+// /// A helper trait for [`LogToConsole`] which automatically implements prefix and suffix functions
+// pub const trait LogToConsoleHelper {
+// }
+// #[cfg(feature = "std")]
+// impl<T: LogToConsole + core::fmt::Debug> LogToConsoleHelper for T {
+//     fn println_self_prefixed(&self, prefix: &str)
+//     fn println_self_suffixed(&self, suffix: &str)
+// }
 #[cfg(feature = "std")]
 impl<T: core::fmt::Debug> LogToConsole for T {
     fn println_self(&self) {
@@ -80,29 +80,5 @@ impl<T: core::fmt::Debug> LogToConsole for T {
     }
     fn print_self(&self) {
         print!("{self:?}");
-    }
-}
-/// Extra functionality for [`FileData`](mirl_core::platform::file_system::FileData)
-pub const trait FileDataStringListSupport {
-    #[must_use]
-    /// Constructor to load data from a [`Vec<String>`]
-    fn from_list_of_strings(
-        value: &[String],
-    ) -> mirl_core::platform::file_system::FileData;
-    /// Get the list of strings/file paths
-    #[must_use]
-    fn to_list_of_strings(&self) -> Option<Vec<String>>;
-}
-impl FileDataStringListSupport for mirl_core::platform::file_system::FileData {
-    fn to_list_of_strings(&self) -> Option<Vec<String>> {
-        self.raw_data.bytes_to_strings()
-    }
-    fn from_list_of_strings(
-        value: &[String],
-    ) -> mirl_core::platform::file_system::FileData {
-        Self::from_bytes(
-            value.strings_to_bytes(),
-            mirl_core::platform::file_system::DataType::ListOfText,
-        )
     }
 }

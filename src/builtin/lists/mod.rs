@@ -16,7 +16,9 @@ impl<T> CollectOptions for Vec<Option<T>> {
 }
 /// Helper functions containing the actual implementations
 pub mod helper_functions_list;
-use crate::{ConstZero, TryIntoPatch, helper_functions_list::*};
+use mirl_extensions_core::ListLike;
+
+use crate::{ConstZero, TryIntoPatch};
 
 /// Add item to list without exceeding the specified maximal size
 pub const trait ListPushOrReplaceOnMaxSize<T> {
@@ -43,6 +45,12 @@ pub const trait ListCombined<T: Clone + Sized> {
     fn combined(self, other: T) -> Vec<T>;
 }
 
+/// Returns the combination of 2 lists
+pub const trait ListsCombined<T: Clone + Sized> {
+    /// Returns what it would be if `T` was pushed onto [`Vec<T>`]
+    fn combined_with(self, other: Vec<T>) -> Vec<T>;
+}
+
 /// Get additions to a list
 pub const trait ListAverage<T> {
     /// Get additions to a list
@@ -50,8 +58,12 @@ pub const trait ListAverage<T> {
 }
 
 /// Returns if the list has duplicate values
-pub const trait ListHasDuplicates<T: core::hash::Hash + Eq> {
+///
+/// This evaluates in O(N^2) time
+pub const trait ListHasDuplicates<T: PartialEq> {
     /// Returns if the list has duplicate values
+    ///
+    /// This evaluates in O(N^2) time
     fn has_duplicates(&self) -> bool;
 }
 /// Find the first instance of T
@@ -61,7 +73,7 @@ pub const trait Index<T: core::cmp::PartialEq> {
 }
 impl<T: core::cmp::Eq> Index<T> for Vec<T> {
     fn find(&self, item: &T) -> Option<usize> {
-        find_in_list(self, item)
+        self.iter().position(|x| *x == *item)
     }
 }
 /// Other list functions
@@ -106,14 +118,28 @@ pub const trait ListGetNewItemsCloned<T: core::cmp::PartialEq + Clone> {
     /// Get what is new in the other list compared to this one
     fn get_old_items_cloned(&self, new: &[T]) -> Vec<T>;
 }
-impl<T> ListPushOrReplaceOnMaxSize<T> for Vec<T> {
+impl<T, List: ListLike<T, usize>> ListPushOrReplaceOnMaxSize<T> for List {
     fn push_or_replace_on_max_size(&mut self, max_size: usize, item: T) {
-        add_item_to_max_sized_list(self, max_size, item);
+        self.push(item);
+        if self.len() < max_size {
+            return;
+        }
+        let to_remove = self.len() - max_size;
+        for _ in 0..to_remove {
+            self.remove(0);
+        }
     }
 }
-impl<T: core::cmp::Eq + core::hash::Hash> ListHasDuplicates<T> for Vec<T> {
+impl<T: PartialEq, List: ListLike<T, usize>> ListHasDuplicates<T> for List {
     fn has_duplicates(&self) -> bool {
-        has_duplicates(self)
+        for i in 0..self.len() {
+            for j in (i + 1)..self.len() {
+                if unsafe { self.get_unchecked(i).eq(self.get_unchecked(j)) } {
+                    return true;
+                }
+            }
+        }
+        false
     }
 }
 impl<T: Copy> ListGetRegion<T> for Vec<T> {
@@ -125,115 +151,96 @@ impl<T: Copy> ListGetRegion<T> for Vec<T> {
         cutout_width: usize,
         cutout_height: usize,
     ) -> Self {
-        get_sub_vec_of_vec(
-            self,
-            vec_width,
-            cutout_x,
-            cutout_y,
-            cutout_width,
-            cutout_height,
-        )
+        let mut sub_vec: Self = Self::new();
+
+        for y in cutout_y..cutout_y + cutout_height {
+            for x in cutout_x..cutout_x + cutout_width {
+                sub_vec.push(self[y * vec_width + x]);
+            }
+        }
+        sub_vec
     }
 }
-impl<'a, T: core::cmp::PartialEq> ListGetNewItems<'a, T> for Vec<T> {
+impl<'a, T: PartialEq, List: ListLike<T, usize>> ListGetNewItems<'a, T> for List {
     fn get_new_items(&'a self, old: &'a [T]) -> Vec<&'a T> {
-        get_difference_new(old, self)
+        let mut result = Vec::new();
+        for i in self.iter() {
+            if !old.contains(i) {
+                result.push(i);
+            }
+        }
+        result
     }
     fn get_old_items(&'a self, new: &'a [T]) -> Vec<&'a T> {
-        get_difference_new(self, new)
+        let mut result = Vec::new();
+        for i in new {
+            if !self.contains(i) {
+                result.push(i);
+            }
+        }
+        result
     }
 }
 #[allow(clippy::use_self)] // No clippy, Self is not allowed in this context
 impl<T: core::cmp::PartialEq + Clone> ListGetNewItemsCloned<T> for Vec<T> {
     fn get_new_items_cloned(&self, old: &[T]) -> Vec<T> {
-        get_difference_new_cloned(old, self)
+        let mut result = Vec::new();
+        for i in self {
+            if !old.contains(i) {
+                result.push(i.clone());
+            }
+        }
+        result
     }
     fn get_old_items_cloned(&self, new: &[T]) -> Vec<T> {
-        get_difference_new_cloned(self, new)
+        new.get_new_items_cloned(self)
+    }
+}
+#[allow(clippy::use_self)] // No clippy, Self is not allowed in this context
+impl<T: core::cmp::PartialEq + Clone> ListGetNewItemsCloned<T> for [T] {
+    fn get_new_items_cloned(&self, old: &[T]) -> Vec<T> {
+        let mut result = Vec::new();
+        for i in self {
+            if !old.contains(i) {
+                result.push(i.clone());
+            }
+        }
+        result
+    }
+    fn get_old_items_cloned(&self, new: &[T]) -> Vec<T> {
+        new.get_new_items_cloned(self)
     }
 }
 
 impl<T: core::clone::Clone> ListCombined<T> for Vec<T> {
     fn combined(self, other: T) -> Self {
-        combined(self, other)
+        let mut new_vec = self;
+        new_vec.push(other);
+        new_vec
     }
 }
 
-impl<
-    T: ConstZero
-        + Copy
-        + PartialEq
-        + core::ops::Add<Output = T>
-        + core::ops::Div<Output = T>,
-> ListAverage<T> for Vec<T>
+impl<T: core::clone::Clone> ListsCombined<T> for Vec<T> {
+    fn combined_with(self, other: Self) -> Self {
+        let mut new_vec = self;
+        new_vec.reserve(other.len());
+        new_vec.extend(other);
+        new_vec
+    }
+}
+
+impl<T: ConstZero + Copy + PartialEq + core::ops::Add<Output = T> + core::ops::Div<Output = T>>
+    ListAverage<T> for [T]
 where
     usize: TryIntoPatch<T>,
 {
     fn average(&self) -> Option<T> {
-        average(self)
-    }
-}
-
-/// Encode `Vec<String>` into `Vec<u8>`
-pub const trait StringListEncoder {
-    /// Encode `Vec<String>` into `Vec<u8>`
-    fn strings_to_bytes(&self) -> Vec<u8>;
-}
-
-/// Decode `Vec<u8>` into `Vec<String>`
-pub const trait StringListDecoder: Sized {
-    /// Decode `Vec<u8>` into `Vec<String>`
-    fn bytes_to_strings(&self) -> Option<Vec<String>>;
-}
-impl StringListEncoder for &[String] {
-    fn strings_to_bytes(&self) -> Vec<u8> {
-        let mut bytes = Vec::new();
-        bytes.extend_from_slice(&(self.len() as u32).to_le_bytes());
-        for s in *self {
-            let string_bytes = s.as_bytes();
-            bytes.extend_from_slice(&(string_bytes.len() as u32).to_le_bytes());
-            bytes.extend_from_slice(string_bytes);
+        let len = (self.len()).try_into_value()?;
+        if core::intrinsics::unlikely(len == T::ZERO) {
+            return None;
         }
-        bytes
-    }
-}
-impl StringListEncoder for Vec<String> {
-    fn strings_to_bytes(&self) -> Vec<u8> {
-        self.as_slice().strings_to_bytes()
-    }
-}
+        let sum: T = self.iter().copied().fold(T::ZERO, |a, b| a + b);
 
-impl StringListDecoder for &[u8] {
-    #[allow(clippy::cast_possible_truncation)]
-    fn bytes_to_strings(&self) -> Option<Vec<String>> {
-        let mut cursor = 0;
-        let mut strings = Vec::new();
-
-        let num_strings = self
-            .get(cursor..cursor + 4)
-            .map(|b| u32::from_le_bytes(b.try_into().unwrap()) as usize)?;
-        cursor += 4;
-
-        for _ in 0..num_strings {
-            let len = self
-                .get(cursor..cursor + 4)
-                .map(|b| u32::from_le_bytes(b.try_into().unwrap()) as usize)?;
-            cursor += 4;
-
-            let s = self
-                .get(cursor..cursor + len)
-                .and_then(|b| String::from_utf8(b.to_vec()).ok())?;
-            strings.push(s);
-            cursor += len;
-        }
-
-        Some(strings)
-    }
-}
-
-impl StringListDecoder for Vec<u8> {
-    #[allow(clippy::cast_possible_truncation)]
-    fn bytes_to_strings(&self) -> Option<Vec<String>> {
-        self.as_slice().bytes_to_strings()
+        Some(sum / len)
     }
 }
