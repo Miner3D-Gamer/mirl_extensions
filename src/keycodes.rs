@@ -9,7 +9,7 @@ pub const trait GetFunctionKeyFromKeycode {
         self.get_function_key::<u8>().is_some()
     }
 }
-impl GetFunctionKeyFromKeycode for mirl_core::platform::keycodes::KeyCode {
+impl GetFunctionKeyFromKeycode for mirl_input::keyboard::KeyCode {
     /// Get the number of the keycode if it is a number
     fn get_function_key<T: crate::ConstNumbers128>(&self) -> Option<T> {
         Some(match self {
@@ -47,7 +47,7 @@ impl GetFunctionKeyFromKeycode for mirl_core::platform::keycodes::KeyCode {
 pub const trait GetNumberFromKeycode {
     #[must_use]
     /// Get the number of the keycode if it is a number
-    fn get_number<T: [const] crate::ConstNumbers128>(&self) -> Option<T>;
+    fn get_number<T: crate::ConstNumbers128>(&self) -> Option<T>;
     #[must_use]
     /// Check if the given keycode is a number
     fn is_number(&self) -> bool {
@@ -55,9 +55,9 @@ pub const trait GetNumberFromKeycode {
     }
 }
 
-impl const GetNumberFromKeycode for mirl_core::platform::keycodes::KeyCode {
+const impl GetNumberFromKeycode for mirl_input::keyboard::KeyCode {
     /// Get the number of the keycode if it is a number
-    fn get_number<T: [const] crate::ConstNumbers128>(&self) -> Option<T> {
+    fn get_number<T: crate::ConstNumbers128>(&self) -> Option<T> {
         Some(match self {
             Self::Num0 | Self::KeyPad0 => T::CONST_0,
             Self::Num1 | Self::KeyPad1 => T::CONST_1,

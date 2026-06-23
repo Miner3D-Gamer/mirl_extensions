@@ -1,4 +1,4 @@
-use mirl_core::text::position::TextPosition;
+use mirl_geometry_core::text_position::TextPosition;
 
 use crate::{IntoPatch, TryIntoPatch};
 /// Get the position of a character from an offset

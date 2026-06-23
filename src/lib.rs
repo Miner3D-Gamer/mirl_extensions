@@ -23,7 +23,7 @@
 
 // TODO: Implement a `.map(|x| x)` function for tuples
 
-pub use mirl_core::{impl_empty_trait, impl_trait};
+pub use mirl_extensions_core::{impl_empty_trait, impl_trait};
 pub use mirl_extensions_conversion::*;
 pub use mirl_extensions_core::*;
 pub use mirl_extensions_math::*;

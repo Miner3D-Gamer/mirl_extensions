@@ -1,6 +1,4 @@
-impl<T: [const] crate::ConstNumbers128 + [const] crate::Bounded> const
-    ShapeDirectionType for T
-{
+const impl<T: crate::ConstNumbers128 + [const] crate::UpperBounded> ShapeDirectionType for T {
     default fn bottom_direction() -> Self {
         Self::CONST_5
     }
@@ -14,7 +12,7 @@ impl<T: [const] crate::ConstNumbers128 + [const] crate::Bounded> const
         Self::CONST_7
     }
     default fn none_directional() -> Self {
-        Self::MAX
+        Self::max_bound()
     }
     default fn right_direction() -> Self {
         Self::CONST_3
@@ -62,7 +60,7 @@ pub const trait IsDirectionTrue {
         directions: &mirl_geometry_core::directions::NormalDirections,
     ) -> bool;
 }
-impl const IsDirectionTrue for u8 {
+const impl IsDirectionTrue for u8 {
     fn is_direction_true(
         &self,
         directions: &mirl_geometry_core::directions::NormalDirections,
@@ -82,7 +80,7 @@ impl const IsDirectionTrue for u8 {
 }
 
 // TODO: Add this trait to other directions
-impl const IsDirectionTrue for mirl_geometry_core::directions::Directions {
+const impl IsDirectionTrue for mirl_geometry_core::directions::Directions {
     fn is_direction_true(
         &self,
         directions: &mirl_geometry_core::directions::NormalDirections,
@@ -101,7 +99,7 @@ pub const trait IsDirectionTrueForNormalDirection<T: IsDirectionTrue> {
     fn is_direction_true(&self, direction: &T) -> bool;
 }
 
-impl<T: [const] IsDirectionTrue> const IsDirectionTrueForNormalDirection<T>
+const impl<T: [const] IsDirectionTrue> IsDirectionTrueForNormalDirection<T>
     for mirl_geometry_core::directions::NormalDirections
 {
     fn is_direction_true(&self, direction: &T) -> bool {
