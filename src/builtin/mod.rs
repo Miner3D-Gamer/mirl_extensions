@@ -26,8 +26,10 @@ pub use panic::*;
 
 /// More tuple functions
 mod tuple;
-
 pub use tuple::*;
+
+mod bool;
+pub use bool::*;
 
 #[cfg(feature = "std")]
 mod string;

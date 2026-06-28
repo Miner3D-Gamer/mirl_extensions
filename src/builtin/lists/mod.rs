@@ -16,7 +16,7 @@ impl<T> CollectOptions for Vec<Option<T>> {
 }
 /// Helper functions containing the actual implementations
 pub mod helper_functions_list;
-use mirl_extensions_core::ListLike;
+use mirl_extensions_core::{ListLike, ListLikeIter};
 
 use crate::{ConstZero, TryIntoPatch};
 
@@ -161,7 +161,9 @@ impl<T: Copy> ListGetRegion<T> for Vec<T> {
         sub_vec
     }
 }
-impl<'a, T: PartialEq, List: ListLike<T, usize>> ListGetNewItems<'a, T> for List {
+impl<'a, T: PartialEq, List: ListLike<T, usize> + ListLikeIter<T, usize>> ListGetNewItems<'a, T>
+    for List
+{
     fn get_new_items(&'a self, old: &'a [T]) -> Vec<&'a T> {
         let mut result = Vec::new();
         for i in self.iter() {
@@ -242,5 +244,16 @@ where
         let sum: T = self.iter().copied().fold(T::ZERO, |a, b| a + b);
 
         Some(sum / len)
+    }
+}
+/// Remove one instance of the given value
+pub trait ListDeleteValue<T, Idx> {
+    /// Remove one instance of the given value
+    fn delete(&mut self, value: &T) -> Option<T>;
+}
+impl<T: ListLike<V, Idx>, V: std::cmp::PartialEq, Idx> ListDeleteValue<V, Idx> for T {
+    fn delete(&mut self, value: &V) -> Option<V> {
+        let idx = self.find_position(value)?;
+        Some(unsafe { self.try_remove(idx).unwrap_unchecked() })
     }
 }

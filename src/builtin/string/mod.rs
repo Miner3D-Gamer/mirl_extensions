@@ -1,4 +1,6 @@
+#[cfg(feature = "mirl_geometry")]
 mod text_position;
+#[cfg(feature = "mirl_geometry")]
 pub use text_position::*;
 
 /// More functionality for strings
@@ -17,18 +19,9 @@ pub const trait StringExtensions {
     // fn extract_file_extension(&self) -> String;
     // fn extract_file_name_without_extension(&self) -> String;
     /// Replaces the first occurrence of X with Y
-    fn replace_first_occurrence(
-        &self,
-        target: &str,
-        replacement: &str,
-    ) -> String;
+    fn replace_first_occurrence(&self, target: &str, replacement: &str) -> String;
     /// Replace the nth instance of a pattern
-    fn replace_nth_occurrence(
-        &self,
-        target: &str,
-        replacement: &str,
-        n: usize,
-    ) -> String;
+    fn replace_nth_occurrence(&self, target: &str, replacement: &str, n: usize) -> String;
     // /// Replaces the first occurrence of X with Y but error if there is not occurrence of X
     // fn replace_first_occurrence_error(
     //     &self,
@@ -107,12 +100,7 @@ impl StringExtensions for str {
     //     let parts: Vec<&str> = parts[0].split('/').collect();
     //     parts[parts.len() - 1].to_string()
     // }
-    fn replace_nth_occurrence(
-        &self,
-        target: &str,
-        replacement: &str,
-        n: usize,
-    ) -> String {
+    fn replace_nth_occurrence(&self, target: &str, replacement: &str, n: usize) -> String {
         let mut start = 0;
         for _ in 0..n {
             if let Some(pos) = self[start..].find(target) {
@@ -129,11 +117,7 @@ impl StringExtensions for str {
         text
     }
 
-    fn replace_first_occurrence(
-        &self,
-        target: &str,
-        replacement: &str,
-    ) -> String {
+    fn replace_first_occurrence(&self, target: &str, replacement: &str) -> String {
         let mut result = self.to_string();
         if let Some(pos) = result.find(target) {
             result.replace_range(pos..pos + target.len(), replacement);

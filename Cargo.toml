@@ -7,7 +7,7 @@ repository.workspace = true
 
 [features]
 default = ["std"]
-std = ["mirl_core/std", "mirl_extensions_conversion/std"]
+std = ["mirl_extensions_conversion/std"]
 # Core
 all = [
     "mirl_values",
@@ -89,7 +89,7 @@ _checking = [
     "mirl_geometry",
 ]
 [dependencies]
-mirl_core = { version = "0.0.0-alpha" }
+# mirl_core = { version = "0.0.0-alpha" }
 mirl_extensions_core = { version = "0.0.0-alpha" }
 mirl_extensions_math = { version = "0.0.0-alpha" }
 mirl_extensions_conversion = { version = "0.0.0-alpha" }
