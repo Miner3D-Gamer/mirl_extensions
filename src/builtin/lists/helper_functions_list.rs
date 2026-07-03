@@ -59,7 +59,7 @@
 // /// Returns None if the length of the input is 0
 // #[must_use]
 // pub fn average<
-//     T: ConstZero
+//     T: Zero
 //         + Copy
 //         + PartialEq
 //         + core::ops::Add<Output = T>

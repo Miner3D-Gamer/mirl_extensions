@@ -1,14 +1,16 @@
 use core::cell::Cell;
 
+use mirl_extensions_core::Zero;
+
 /// Set the value inside the Cell to zero
 pub const trait SetCellToZero {
     /// Zero out cell's value
     fn set_zero(&self);
 }
 
-impl<T: crate::ConstZero> SetCellToZero for core::cell::Cell<T> {
+const impl<T: [const] Zero + [const] core::marker::Destruct> SetCellToZero for core::cell::Cell<T> {
     fn set_zero(&self) {
-        self.replace(T::ZERO);
+        self.replace(T::zero());
     }
 }
 
@@ -56,7 +58,7 @@ pub const trait CellIntSaturatedReturnOps<T> {
     fn saturating_multiplied(&self, rhs: T) -> T;
 }
 
-impl<T> const CellIntOps<T> for Cell<T>
+const impl<T> CellIntOps<T> for Cell<T>
 where
     T: Copy
         + [const] core::ops::Add<Output = T>
@@ -114,7 +116,7 @@ where
     }
 }
 
-impl<T> const CellIntSaturatedOps<T> for Cell<T>
+const impl<T> CellIntSaturatedOps<T> for Cell<T>
 where
     T: Copy
         + [const] crate::SaturatingAdd<T, Output = T>
@@ -134,7 +136,7 @@ where
     }
 }
 
-impl<T> const CellIntSaturatedReturnOps<T> for Cell<T>
+const impl<T> CellIntSaturatedReturnOps<T> for Cell<T>
 where
     T: Copy
         + [const] crate::SaturatingAdd<T, Output = T>
@@ -244,12 +246,9 @@ where
     }
 }
 
-impl<T> const CellIntSignedOps<T> for Cell<T>
+const impl<T> CellIntSignedOps<T> for Cell<T>
 where
-    T: Copy
-        + [const] crate::Abs
-        + [const] core::ops::Neg<Output = T>
-        + [const] crate::Sign,
+    T: Copy + [const] crate::Abs + [const] core::ops::Neg<Output = T> + [const] crate::Sign,
 {
     fn abs(&self) {
         self.replace(self.get().abs());
@@ -264,12 +263,9 @@ where
     }
 }
 
-impl<T> const CellIntSignedReturnOps<T> for Cell<T>
+const impl<T> CellIntSignedReturnOps<T> for Cell<T>
 where
-    T: Copy
-        + [const] crate::Abs
-        + [const] core::ops::Neg<Output = T>
-        + [const] crate::Sign,
+    T: Copy + [const] crate::Abs + [const] core::ops::Neg<Output = T> + [const] crate::Sign,
 {
     fn absed(&self) -> T {
         self.get().abs()
@@ -284,11 +280,9 @@ where
     }
 }
 
-impl<T> const CellIntSaturatedSignedOps<T> for Cell<T>
+const impl<T> CellIntSaturatedSignedOps<T> for Cell<T>
 where
-    T: Copy
-        + [const] crate::SaturatingAbs<Output = T>
-        + [const] crate::SaturatingNeg<Output = T>,
+    T: Copy + [const] crate::SaturatingAbs<Output = T> + [const] crate::SaturatingNeg<Output = T>,
 {
     fn saturating_abs(&self) {
         self.replace(self.get().saturating_abs());
@@ -299,11 +293,9 @@ where
     }
 }
 
-impl<T> const CellIntSaturatedSignedReturnOps<T> for Cell<T>
+const impl<T> CellIntSaturatedSignedReturnOps<T> for Cell<T>
 where
-    T: Copy
-        + [const] crate::SaturatingAbs<Output = T>
-        + [const] crate::SaturatingNeg<Output = T>,
+    T: Copy + [const] crate::SaturatingAbs<Output = T> + [const] crate::SaturatingNeg<Output = T>,
 {
     fn saturating_absed(&self) -> T {
         self.get().saturating_abs()

@@ -1,30 +1,32 @@
-const impl<T: crate::ConstNumbers128 + [const] crate::UpperBounded> ShapeDirectionType for T {
+use mirl_extensions_math::Numbers128;
+
+const impl<T: [const] Numbers128 + [const] crate::UpperBounded> ShapeDirectionType for T {
     default fn bottom_direction() -> Self {
-        Self::CONST_5
+        Self::num_5()
     }
     default fn bottom_left_direction() -> Self {
-        Self::CONST_6
+        Self::num_6()
     }
     default fn bottom_right_direction() -> Self {
-        Self::CONST_4
+        Self::num_4()
     }
     default fn left_direction() -> Self {
-        Self::CONST_7
+        Self::num_7()
     }
     default fn none_directional() -> Self {
         Self::max_bound()
     }
     default fn right_direction() -> Self {
-        Self::CONST_3
+        Self::num_3()
     }
     default fn top_direction() -> Self {
-        Self::CONST_1
+        Self::num_1()
     }
     default fn top_left_direction() -> Self {
-        Self::CONST_0
+        Self::num_0()
     }
     default fn top_right_direction() -> Self {
-        Self::CONST_2
+        Self::num_2()
     }
 }
 

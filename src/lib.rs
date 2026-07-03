@@ -30,6 +30,7 @@ pub use mirl_extensions_math::*;
 
 // mod_and_pub_import!(conversion);
 mod_and_pub_import!(consts);
+#[cfg(feature = "mirl_input")]
 mod_and_pub_import!(keycodes);
 mod_and_pub_import!(builtin);
 #[cfg(feature = "mirl_geometry")]

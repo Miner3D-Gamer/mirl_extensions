@@ -22,18 +22,22 @@ const impl GetCursorResolution for CursorResolution {
 /// Turn the mouse button into a logical number
 pub const trait MouseButtonToNumber {
     /// Turn the mouse button into a logical number
-    fn to_number<T: [const] UpperBounded + ConstNumbers128 + ConstOne + ConstZero>(&self) -> T;
+    fn to_number<T: [const] UpperBounded + [const] Numbers128 + [const] One + [const] Zero>(
+        &self,
+    ) -> T;
 }
 const impl MouseButtonToNumber for MouseButton {
-    fn to_number<T: [const] UpperBounded + ConstNumbers128 + ConstOne + ConstZero>(&self) -> T {
+    fn to_number<T: [const] UpperBounded + [const] Numbers128 + [const] One + [const] Zero>(
+        &self,
+    ) -> T {
         match self {
-            MouseButton::Left => T::CONST_0,
-            MouseButton::Right => T::CONST_1,
-            MouseButton::Middle => T::CONST_2,
-            MouseButton::Extra1 => T::CONST_3,
-            MouseButton::Extra2 => T::CONST_4,
-            MouseButton::Extra3 => T::CONST_5,
-            MouseButton::Extra4 => T::CONST_6,
+            MouseButton::Left => T::num_0(),
+            MouseButton::Right => T::num_1(),
+            MouseButton::Middle => T::num_2(),
+            MouseButton::Extra1 => T::num_3(),
+            MouseButton::Extra2 => T::num_4(),
+            MouseButton::Extra3 => T::num_5(),
+            MouseButton::Extra4 => T::num_6(),
             MouseButton::Unsupported => T::max_bound(),
         }
     }

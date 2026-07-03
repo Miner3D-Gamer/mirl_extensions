@@ -18,7 +18,7 @@ impl<T> CollectOptions for Vec<Option<T>> {
 pub mod helper_functions_list;
 use mirl_extensions_core::{ListLike, ListLikeIter};
 
-use crate::{ConstZero, TryIntoPatch};
+use crate::{TryIntoPatch, Zero};
 
 /// Add item to list without exceeding the specified maximal size
 pub const trait ListPushOrReplaceOnMaxSize<T> {
@@ -231,17 +231,17 @@ impl<T: core::clone::Clone> ListsCombined<T> for Vec<T> {
     }
 }
 
-impl<T: ConstZero + Copy + PartialEq + core::ops::Add<Output = T> + core::ops::Div<Output = T>>
+impl<T: Zero + Copy + PartialEq + core::ops::Add<Output = T> + core::ops::Div<Output = T>>
     ListAverage<T> for [T]
 where
     usize: TryIntoPatch<T>,
 {
     fn average(&self) -> Option<T> {
         let len = (self.len()).try_into_value()?;
-        if core::intrinsics::unlikely(len == T::ZERO) {
+        if core::intrinsics::unlikely(len == T::zero()) {
             return None;
         }
-        let sum: T = self.iter().copied().fold(T::ZERO, |a, b| a + b);
+        let sum: T = self.iter().copied().fold(T::zero(), |a, b| a + b);
 
         Some(sum / len)
     }

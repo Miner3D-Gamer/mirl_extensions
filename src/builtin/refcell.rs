@@ -1,9 +1,9 @@
 // use core::cell::RefCell;
 // use crate::*;
 
-// impl<T: crate::ConstZero> SetCellToZero for core::cell::RefCell<T> {
+// impl<T: crate::Zero> SetCellToZero for core::cell::RefCell<T> {
 //     fn set_zero(&self) {
-//         self.replace(T::ZERO);
+//         self.replace(T::zero());
 //     }
 // }
 // impl<T> const CellIntOps<T> for RefCell<T>

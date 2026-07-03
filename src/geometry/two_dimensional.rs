@@ -1,4 +1,4 @@
-use mirl_extensions_core::IsNumberType;
+use mirl_extensions_core::{IsNumberType, Zero};
 
 /// Obtain the 2d coordinate at which the object is located
 pub const trait Get2DCoordinate<T> {
@@ -55,7 +55,7 @@ const impl<
     S: [const] Get2DCoordinateCenter<N>,
     T: [const] Get2DCoordinateCenter<N>,
     N: [const] core::ops::Sub<Output = N>
-        + crate::ConstZero
+        + [const] Zero
         + [const] core::cmp::PartialOrd
         + [const] crate::Abs
         + [const] core::ops::Mul<Output = N>
@@ -73,12 +73,12 @@ const impl<
         let margin_y = target.1 - current.1;
 
         if margin_y.abs() > margin_x.abs() * target_ratio {
-            if (CS && margin_y > N::ZERO) || (!CS && margin_y < N::ZERO) {
+            if (CS && margin_y > N::zero()) || (!CS && margin_y < N::zero()) {
                 mirl_geometry_core::directions::Directions::North
             } else {
                 mirl_geometry_core::directions::Directions::South
             }
-        } else if margin_x > N::ZERO {
+        } else if margin_x > N::zero() {
             mirl_geometry_core::directions::Directions::East
         } else {
             mirl_geometry_core::directions::Directions::West
