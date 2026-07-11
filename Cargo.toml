@@ -19,10 +19,8 @@ all = [
     "mirl_input",
     "mirl_collections",
 ]
-
 ### Compatibility with ffi
 c_compatible = []
-
 # Supported crates
 ### Mirl
 mirl_values = [
@@ -35,7 +33,6 @@ mirl_collections = ["dep:mirl_collections"]
 mirl_graphics = ["dep:mirl_graphics"]
 mirl_input = ["dep:mirl_input"]
 mirl_geometry = ["dep:mirl_geometry_core"]
-
 ### Support for hashmap libs
 indexmap = [
     "dep:indexmap",
@@ -55,12 +52,9 @@ masstree = [
     "mirl_extensions_core/masstree",
     "mirl_extensions_conversion/masstree",
 ]
-
 # Async
 tokio = ["dep:tokio", "mirl_extensions_conversion/tokio"]
-
 glfw = ["mirl_extensions_conversion/glfw"]
-
 bigfloat = [
     "dep:num-bigfloat",
     "mirl_extensions_conversion/bigfloat",
@@ -72,9 +66,7 @@ bigint = [
     "mirl_extensions_conversion/bigint",
     "mirl_extensions_math/bigint",
 ]
-
 ascii = ["mirl_extensions_conversion/ascii"]
-
 _checking = [
     "indexmap",
     "dashmap",
@@ -91,7 +83,6 @@ _checking = [
 ### Like a HashMap but concurrent
 dashmap = { version = "6.1", optional = true, default-features = false }
 # Crate support
-
 ### Like a HashMap but it remembers in what order elements were inserted
 indexmap = { version = "2.14", optional = true, default-features = false, features = [
     "std",
@@ -101,7 +92,6 @@ indexmap = { version = "2.14", optional = true, default-features = false, featur
 ### A concurrent indexmap
 masstree = { version = "0.9", optional = true, default-features = false }
 mirl_buffer = { version = "0.0.0-alpha" }
-
 mirl_collections = { version = "0.0.0-alpha", optional = true }
 mirl_extensions_conversion = { version = "0.0.0-alpha" }
 # mirl_core = { version = "0.0.0-alpha" }
@@ -112,11 +102,9 @@ mirl_graphics = { version = "0.0.0-alpha", optional = true }
 mirl_input = { version = "0.0.0-alpha", optional = true }
 mirl_values_core = { version = "0.0.0-alpha", optional = true }
 num-bigfloat = { version = "1.7", optional = true }
-
 ### Number crates
 num-bigint = { version = "0.5", optional = true }
 num-traits = { version = "0.2.19", optional = true }
-
 ### Concurrency
 tokio = { version = "1.52", optional = true, features = ["sync"] }
 
