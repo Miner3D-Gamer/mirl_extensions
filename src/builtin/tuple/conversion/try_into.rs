@@ -9,8 +9,8 @@ pub const trait TryTupleInto<T> {
     fn try_tuple_into(self) -> Option<T>;
 }
 
-impl<Target, Source: [const] TryIntoPatch<Target> + [const] Destruct> const
-    TryTupleInto<(Target,)> for (Source,)
+const impl<Target, Source: [const] TryIntoPatch<Target> + [const] Destruct> TryTupleInto<(Target,)>
+    for (Source,)
 where
     Target: [const] Destruct,
 {
@@ -19,8 +19,7 @@ where
     }
 }
 
-impl<Target, Source0, Source1> const TryTupleInto<(Target, Target)>
-    for (Source0, Source1)
+const impl<Target, Source0, Source1> TryTupleInto<(Target, Target)> for (Source0, Source1)
 where
     Source0: [const] TryIntoPatch<Target> + [const] Destruct,
     Source1: [const] TryIntoPatch<Target> + [const] Destruct,
@@ -31,8 +30,8 @@ where
     }
 }
 
-impl<Target, Source0, Source1, Source2> const
-    TryTupleInto<(Target, Target, Target)> for (Source0, Source1, Source2)
+const impl<Target, Source0, Source1, Source2> TryTupleInto<(Target, Target, Target)>
+    for (Source0, Source1, Source2)
 where
     Source0: [const] TryIntoPatch<Target> + [const] Destruct,
     Source1: [const] TryIntoPatch<Target> + [const] Destruct,
@@ -48,9 +47,8 @@ where
     }
 }
 
-impl<Target, Source0, Source1, Source2, Source3> const
-    TryTupleInto<(Target, Target, Target, Target)>
-    for (Source0, Source1, Source2, Source3)
+const impl<Target, Source0, Source1, Source2, Source3>
+    TryTupleInto<(Target, Target, Target, Target)> for (Source0, Source1, Source2, Source3)
 where
     Source0: [const] TryIntoPatch<Target> + [const] Destruct,
     Source1: [const] TryIntoPatch<Target> + [const] Destruct,
@@ -68,7 +66,7 @@ where
     }
 }
 
-impl<Target, Source0, Source1, Source2, Source3, Source4> const
+const impl<Target, Source0, Source1, Source2, Source3, Source4>
     TryTupleInto<(Target, Target, Target, Target, Target)>
     for (Source0, Source1, Source2, Source3, Source4)
 where
@@ -79,9 +77,7 @@ where
     Source4: [const] TryIntoPatch<Target> + [const] Destruct,
     Target: [const] Destruct,
 {
-    fn try_tuple_into(
-        self,
-    ) -> Option<(Target, Target, Target, Target, Target)> {
+    fn try_tuple_into(self) -> Option<(Target, Target, Target, Target, Target)> {
         Some((
             self.0.try_into_value()?,
             self.1.try_into_value()?,
@@ -92,7 +88,7 @@ where
     }
 }
 
-impl<Target, Source0, Source1, Source2, Source3, Source4, Source5> const
+const impl<Target, Source0, Source1, Source2, Source3, Source4, Source5>
     TryTupleInto<(Target, Target, Target, Target, Target, Target)>
     for (Source0, Source1, Source2, Source3, Source4, Source5)
 where
@@ -104,9 +100,7 @@ where
     Source5: [const] TryIntoPatch<Target> + [const] Destruct,
     Target: [const] Destruct,
 {
-    fn try_tuple_into(
-        self,
-    ) -> Option<(Target, Target, Target, Target, Target, Target)> {
+    fn try_tuple_into(self) -> Option<(Target, Target, Target, Target, Target, Target)> {
         Some((
             self.0.try_into_value()?,
             self.1.try_into_value()?,
@@ -118,9 +112,17 @@ where
     }
 }
 
-impl<Target, Source0, Source1, Source2, Source3, Source4, Source5, Source6> const
+const impl<Target, Source0, Source1, Source2, Source3, Source4, Source5, Source6>
     TryTupleInto<(Target, Target, Target, Target, Target, Target, Target)>
-    for (Source0, Source1, Source2, Source3, Source4, Source5, Source6)
+    for (
+        Source0,
+        Source1,
+        Source2,
+        Source3,
+        Source4,
+        Source5,
+        Source6,
+    )
 where
     Source0: [const] TryIntoPatch<Target> + [const] Destruct,
     Source1: [const] TryIntoPatch<Target> + [const] Destruct,
@@ -131,9 +133,7 @@ where
     Source6: [const] TryIntoPatch<Target> + [const] Destruct,
     Target: [const] Destruct,
 {
-    fn try_tuple_into(
-        self,
-    ) -> Option<(Target, Target, Target, Target, Target, Target, Target)> {
+    fn try_tuple_into(self) -> Option<(Target, Target, Target, Target, Target, Target, Target)> {
         Some((
             self.0.try_into_value()?,
             self.1.try_into_value()?,
@@ -146,17 +146,7 @@ where
     }
 }
 
-impl<
-    Target,
-    Source0,
-    Source1,
-    Source2,
-    Source3,
-    Source4,
-    Source5,
-    Source6,
-    Source7,
-> const
+const impl<Target, Source0, Source1, Source2, Source3, Source4, Source5, Source6, Source7>
     TryTupleInto<(
         Target,
         Target,
@@ -167,7 +157,16 @@ impl<
         Target,
         Target,
     )>
-    for (Source0, Source1, Source2, Source3, Source4, Source5, Source6, Source7)
+    for (
+        Source0,
+        Source1,
+        Source2,
+        Source3,
+        Source4,
+        Source5,
+        Source6,
+        Source7,
+    )
 where
     Source0: [const] TryIntoPatch<Target> + [const] Destruct,
     Source1: [const] TryIntoPatch<Target> + [const] Destruct,
@@ -181,8 +180,16 @@ where
 {
     fn try_tuple_into(
         self,
-    ) -> Option<(Target, Target, Target, Target, Target, Target, Target, Target)>
-    {
+    ) -> Option<(
+        Target,
+        Target,
+        Target,
+        Target,
+        Target,
+        Target,
+        Target,
+        Target,
+    )> {
         Some((
             self.0.try_into_value()?,
             self.1.try_into_value()?,
@@ -196,18 +203,7 @@ where
     }
 }
 
-impl<
-    Target,
-    Source0,
-    Source1,
-    Source2,
-    Source3,
-    Source4,
-    Source5,
-    Source6,
-    Source7,
-    Source8,
-> const
+const impl<Target, Source0, Source1, Source2, Source3, Source4, Source5, Source6, Source7, Source8>
     TryTupleInto<(
         Target,
         Target,
@@ -269,7 +265,7 @@ where
     }
 }
 
-impl<
+const impl<
     Target,
     Source0,
     Source1,
@@ -281,7 +277,7 @@ impl<
     Source7,
     Source8,
     Source9,
-> const
+>
     TryTupleInto<(
         Target,
         Target,
@@ -348,7 +344,7 @@ where
     }
 }
 
-impl<
+const impl<
     Target,
     Source0,
     Source1,
@@ -361,7 +357,7 @@ impl<
     Source8,
     Source9,
     Source10,
-> const
+>
     TryTupleInto<(
         Target,
         Target,
@@ -433,7 +429,7 @@ where
     }
 }
 
-impl<
+const impl<
     Target,
     Source0,
     Source1,
@@ -447,7 +443,7 @@ impl<
     Source9,
     Source10,
     Source11,
-> const
+>
     TryTupleInto<(
         Target,
         Target,

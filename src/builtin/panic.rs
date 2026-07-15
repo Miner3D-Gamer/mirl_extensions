@@ -19,7 +19,7 @@ pub const trait UnwrapDefault<O> {
     fn unwrap_or_default(self) -> O;
 }
 
-impl<O: [const] core::marker::Destruct> const Unwrap<O> for Option<O> {
+const impl<O: [const] core::marker::Destruct> Unwrap<O> for Option<O> {
     #[inline(always)]
     fn unwrap(self) -> O {
         Self::unwrap(self)
@@ -33,7 +33,7 @@ impl<O: [const] core::marker::Destruct> const Unwrap<O> for Option<O> {
         unsafe { Self::unwrap_unchecked(self) }
     }
 }
-impl<O: [const] core::default::Default> const UnwrapDefault<O> for Option<O> {
+const impl<O: [const] core::default::Default> UnwrapDefault<O> for Option<O> {
     #[inline(always)]
     fn unwrap_or_default(self) -> O {
         Self::unwrap_or_default(self)

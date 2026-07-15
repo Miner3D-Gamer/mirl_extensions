@@ -6,7 +6,18 @@ repository.workspace = true
 
 [features]
 default = ["std"]
-std = ["mirl_extensions_conversion/std"]
+std = [
+    "mirl_extensions_conversion/std",
+    "indexmap?/std",
+    "mirl_buffer/std",
+    "mirl_extensions_core/std",
+    "mirl_extensions_math/std",
+    "mirl_geometry_core?/std",
+    "mirl_graphics?/std",
+    "num-bigfloat?/std",
+    "num-bigint?/std",
+    "num-traits?/std",
+]
 # Core
 all = [
     "mirl_values",
@@ -18,9 +29,24 @@ all = [
     "mirl_graphics",
     "mirl_input",
     "mirl_collections",
+    "mirl_buffer/all",
+    "mirl_collections?/all",
+    "mirl_extensions_core/all",
+    "mirl_extensions_math/all",
+    "mirl_graphics?/all",
+    "mirl_input?/all",
+    "mirl_values_core?/all",
 ]
 ### Compatibility with ffi
-c_compatible = []
+c_compatible = [
+    "mirl_buffer/c_compatible",
+    "mirl_collections?/c_compatible",
+    "mirl_extensions_core/c_compatible",
+    "mirl_geometry_core?/c_compatible",
+    "mirl_graphics?/c_compatible",
+    "mirl_input?/c_compatible",
+    "mirl_values_core?/c_compatible",
+]
 # Supported crates
 ### Mirl
 mirl_values = [
@@ -29,8 +55,8 @@ mirl_values = [
     "bigfloat",
     "mirl_extensions_conversion/mirl_values",
 ]
-mirl_collections = ["dep:mirl_collections"]
-mirl_graphics = ["dep:mirl_graphics"]
+mirl_collections = ["dep:mirl_collections", "mirl_graphics?/mirl_collections"]
+mirl_graphics = ["dep:mirl_graphics", "mirl_extensions_conversion/mirl_graphics"]
 mirl_input = ["dep:mirl_input"]
 mirl_geometry = ["dep:mirl_geometry_core"]
 ### Support for hashmap libs
@@ -59,12 +85,14 @@ bigfloat = [
     "dep:num-bigfloat",
     "mirl_extensions_conversion/bigfloat",
     "mirl_extensions_math/bigfloat",
+    "mirl_extensions_core/bigfloat",
 ]
 bigint = [
     "dep:num-bigint",
     "dep:num-traits",
     "mirl_extensions_conversion/bigint",
     "mirl_extensions_math/bigint",
+    "mirl_extensions_core/bigint",
 ]
 ascii = ["mirl_extensions_conversion/ascii"]
 _checking = [

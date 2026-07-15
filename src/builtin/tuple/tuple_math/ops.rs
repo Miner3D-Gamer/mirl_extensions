@@ -18,7 +18,7 @@ macro_rules! impl_helper {
 // Tuple OP Tuple
 macro_rules! tuple_ops {
     ( $($n:tt),+ ) => {
-        impl<T> const TupleOps for ( $( impl_helper!(@type $n T), )+ )
+        const impl<T>  TupleOps for ( $( impl_helper!(@type $n T), )+ )
         where
             T: [const] Add<Output = T>
                 + [const] Sub<Output = T>
@@ -47,7 +47,7 @@ macro_rules! tuple_ops {
 // Tuple OP Scalar
 macro_rules! tuple_scalar_ops {
     ( $($n:tt),+ ) => {
-        impl<T> const TupleOps<T> for ( $( impl_helper!(@type $n T), )+ )
+        const impl<T>  TupleOps<T> for ( $( impl_helper!(@type $n T), )+ )
         where
             T: [const] Add<Output = T>
                 + [const] Sub<Output = T>

@@ -6,14 +6,14 @@ pub const trait RangeExtension<T, F> {
     fn get_percent_from_value(&self, value: T) -> Option<F>;
 }
 
-impl<
+const impl<
     T: [const] crate::TryIntoPatch<F> + Copy,
     F: [const] crate::TryIntoPatch<T>
         + [const] core::ops::Mul<Output = F>
         + [const] core::ops::Div<Output = F>
         + [const] crate::Round
         + Copy,
-> const RangeExtension<T, F> for core::ops::Range<T>
+> RangeExtension<T, F> for core::ops::Range<T>
 {
     fn get_value_from_percent(&self, percentage: F) -> Option<T> {
         ((self.end.try_into_value()? * percentage).round()).try_into_value()
