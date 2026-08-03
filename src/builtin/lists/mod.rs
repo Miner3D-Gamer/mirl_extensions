@@ -27,7 +27,7 @@ pub const trait ListPushOrReplaceOnMaxSize<T> {
 }
 
 /// Cut out a 2d area from a 1d array and return it as a 1d array
-pub const trait ListGetRegion<T: Copy> {
+pub const trait ListGetRegion<T> {
     /// Cut out a 2d area from a 1d array and return it as a 1d array
     fn get_region(
         &self,
@@ -142,7 +142,8 @@ impl<T: PartialEq, List: ListLike<T, usize>> ListHasDuplicates<T> for List {
         false
     }
 }
-impl<T: Copy> ListGetRegion<T> for Vec<T> {
+impl<T: Clone> ListGetRegion<T> for Vec<T> {
+    #[track_caller]
     fn get_region(
         &self,
         vec_width: usize,
@@ -155,7 +156,7 @@ impl<T: Copy> ListGetRegion<T> for Vec<T> {
 
         for y in cutout_y..cutout_y + cutout_height {
             for x in cutout_x..cutout_x + cutout_width {
-                sub_vec.push(self[y * vec_width + x]);
+                sub_vec.push(self[y * vec_width + x].clone());
             }
         }
         sub_vec
