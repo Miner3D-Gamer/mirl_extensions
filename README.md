@@ -1,5 +1,11 @@
 # Mirl Extensions (0.0.0-alpha)
 
+[![Version](https://img.shields.io/crates/v/mirl_extensions.svg)](https://crates.io/crates/mirl_extensions)
+[![Documentation](https://docs.rs/mirl_extensions/badge.svg)](https://docs.rs/mirl_extensions)
+[![dependency status](https://deps.rs/repo/github/Miner3D-Gamer/mirl_extensions/status.svg)](https://deps.rs/repo/github/Miner3D-Gamer/mirl_extensions)
+[![Minimum Supported Rust Version](https://img.shields.io/badge/MSRV-1.99–nightly-blue)](https://github.com/rust-lang/rust/releases/tag/1.99.0)
+[![Changelog](https://img.shields.io/badge/CHANGELOG.md--555.svg)](https://github.com/Miner3D-Gamer/mirl_extensions/blob/main/CHANGELOG.md)
+
 ### Mext - Library defining only traits and macros to silently enhance the rust experience
 
 <details>

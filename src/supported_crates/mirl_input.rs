@@ -38,7 +38,8 @@ const impl MouseButtonToNumber for MouseButton {
             MouseButton::Extra2 => T::num_4(),
             MouseButton::Extra3 => T::num_5(),
             MouseButton::Extra4 => T::num_6(),
-            MouseButton::Unsupported => T::max_bound(),
+            MouseButton::Extra5 => T::num_7(),
+            MouseButton::Extra6 => T::num_8(),
         }
     }
 }

@@ -1,7 +1,7 @@
 [package]
 name = "mirl_extensions"
 version = "0.0.0-alpha"
-edition.workspace = true
+edition = "2024"
 repository.workspace = true
 
 [features]
@@ -107,6 +107,7 @@ _checking = [
     "mirl_collections",
     "mirl_geometry",
 ]
+fixed = ["mirl_extensions_math/fixed", "mirl_extensions_core/fixed"]
 [dependencies]
 ### Like a HashMap but concurrent
 dashmap = { version = "6.1", optional = true, default-features = false }
@@ -115,8 +116,6 @@ dashmap = { version = "6.1", optional = true, default-features = false }
 indexmap = { version = "2.14", optional = true, default-features = false, features = [
     "std",
 ] }
-# ### Like dashmap but faster reading and slower writing
-# evmap = { version = ">=11.0.0", optional = true, default-features = false }
 ### A concurrent indexmap
 masstree = { version = "0.9", optional = true, default-features = false }
 mirl_buffer = { version = "0.0.0-alpha" }
@@ -132,12 +131,12 @@ mirl_values_core = { version = "0.0.0-alpha", optional = true }
 num-bigfloat = { version = "1.7", optional = true }
 ### Number crates
 num-bigint = { version = "0.5", optional = true }
-num-traits = { version = "0.2.19", optional = true }
+num-traits = { version = "0.2.19", optional = true, no_default_features = true }
 ### Concurrency
-tokio = { version = "1.52", optional = true, features = ["sync"] }
+tokio = { version = "1.53", optional = true, features = ["sync"] }
 
 [build-dependencies]
-mirl_build_tools = { workspace = true }
+mirl_build_tools = { version = "0.0.0-alpha" }
 
 [lints]
 workspace = true
