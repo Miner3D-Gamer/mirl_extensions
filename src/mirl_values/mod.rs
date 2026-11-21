@@ -1,9 +1,6 @@
 use mirl_values_core::{
     settings::MapType,
-    value::{
-        AngleType, Color, ContainerValue, Datetime, LengthType, Number,
-        SimpleValue, Time,
-    },
+    value::{AngleType, Color, ContainerValue, Datetime, LengthType, Number, SimpleValue, Time},
 };
 
 use crate::{TryFromPatch, mod_and_pub_import};
@@ -13,31 +10,24 @@ mod_and_pub_import!(conversion);
 // TODO: Merge the container + Simple + Super trait
 
 /// What value should be used inside of [`ContainerValue`]
-pub trait InnerCodecValue:
-    std::fmt::Debug + Clone + PartialEq + PartialOrd + Ord
+pub const trait InnerCodecValue:
+    std::fmt::Debug + [const] Clone + [const] PartialEq + [const] PartialOrd + [const] Ord
 {
     /// The type used inside of [`ContainerValue`], it should be you Value Wrapper
     type Inner: std::fmt::Debug + Clone + PartialEq + PartialOrd + Ord;
 }
 
 /// Decompose a value by reference into its simple or container variant.
-pub trait CodecSubValueRef:
-    CodecContainerSubValueRef + CodecSimpleSubValueRef
+pub trait CodecSubValueRef: CodecContainerSubValueRef + CodecSimpleSubValueRef
 // where
 //     <<Self as CodecContainerSubValueRef>::InnerValue as InnerCodecValue>::Inner:
 //         InnerCodecValue,
 {
 }
-impl<T: CodecContainerSubValueRef + CodecSimpleSubValueRef> CodecSubValueRef
-    for T
-{
-}
+impl<T: CodecContainerSubValueRef + CodecSimpleSubValueRef> CodecSubValueRef for T {}
 
 /// Decompose a value by ownership into its simple or container variant.
-pub trait CodecSubValueInto:
-    Sized + CodecContainerSubValueInto + CodecSimpleSubValueInto
-{
-}
+pub trait CodecSubValueInto: Sized + CodecContainerSubValueInto + CodecSimpleSubValueInto {}
 /// Decompose a value by reference into its simple variant.
 pub trait CodecSimpleSubValueRef {
     /// Your wrapper as a simple value
@@ -74,9 +64,8 @@ pub trait CodecContainerSubValueRef {
     /// The [`InnerCodecValue`] for your Value wrapper
     type InnerValue: InnerCodecValue;
     /// Your wrapper as a container value
-    fn as_container(
-        &self,
-    ) -> Option<&ContainerValue<<Self::InnerValue as InnerCodecValue>::Inner>>;
+    fn as_container(&self)
+    -> Option<&ContainerValue<<Self::InnerValue as InnerCodecValue>::Inner>>;
 }
 /// Decompose a value by reference into its container variant.
 pub trait CodecContainerSubValueRefMut {
@@ -103,9 +92,8 @@ pub trait CodecContainerSubValueInto: Sized {
     type InnerValue: InnerCodecValue;
 
     /// Your wrapper as a container value
-    fn into_container(
-        self,
-    ) -> Option<ContainerValue<<Self::InnerValue as InnerCodecValue>::Inner>>;
+    fn into_container(self)
+    -> Option<ContainerValue<<Self::InnerValue as InnerCodecValue>::Inner>>;
 }
 
 // ── Everything below is auto-implemented ─────────────────────────────────────
@@ -340,9 +328,7 @@ impl<T: CodecSimpleSubValueRef> SimpleValueAccessToNumber for T {}
 /// Access container (vec/map) variants of a value by reference.
 pub trait ContainerValueAccessRef: CodecContainerSubValueRef {
     /// If the container value is a vec, return a reference to it
-    fn as_vec_ref(
-        &self,
-    ) -> Option<&Vec<<Self::InnerValue as InnerCodecValue>::Inner>> {
+    fn as_vec_ref(&self) -> Option<&Vec<<Self::InnerValue as InnerCodecValue>::Inner>> {
         if let ContainerValue::Vec(v) = self.as_container()? {
             Some(v)
         } else {
@@ -371,9 +357,7 @@ pub trait ContainerValueAccessRef: CodecContainerSubValueRef {
 /// Access container (vec/map) variants of a value by reference.
 pub trait ContainerValueAccessRefMut: CodecContainerSubValueRefMut {
     /// If the container value is a vec, return a reference to it
-    fn as_vec_ref_mut(
-        &mut self,
-    ) -> Option<&mut Vec<<Self::InnerValue as InnerCodecValue>::Inner>> {
+    fn as_vec_ref_mut(&mut self) -> Option<&mut Vec<<Self::InnerValue as InnerCodecValue>::Inner>> {
         if let ContainerValue::Vec(v) = self.as_container_mut()? {
             Some(v)
         } else {
@@ -409,29 +393,17 @@ impl<T: CodecContainerSubValueRefMut> ContainerValueAccessRefMut for T {}
 /// Prefer bounding on this trait when you need access to all value variants.
 /// Both [`SimpleValueAccessRef`] and [`ContainerValueAccessRef`] are available
 /// on any type that implements this trait.
-pub trait CodecValueAccessRef:
-    SimpleValueAccessRef + ContainerValueAccessRef
-{
-}
+pub trait CodecValueAccessRef: SimpleValueAccessRef + ContainerValueAccessRef {}
 
 // Blanket impl: everything that satisfies both sub-traits gets the master trait for free.
-impl<T: SimpleValueAccessRef + ContainerValueAccessRef> CodecValueAccessRef
-    for T
-{
-}
+impl<T: SimpleValueAccessRef + ContainerValueAccessRef> CodecValueAccessRef for T {}
 /// Master by-reference accessor trait combining simple and container access.
 ///
 /// Prefer bounding on this trait when you need access to all value variants.
 /// Both [`SimpleValueAccessRefMut`] and [`ContainerValueAccessRefMut`] are available
 /// on any type that implements this trait.
-pub trait CodecValueAccessRefMut:
-    SimpleValueAccessRefMut + ContainerValueAccessRefMut
-{
-}
-impl<T: SimpleValueAccessRefMut + ContainerValueAccessRefMut>
-    CodecValueAccessRefMut for T
-{
-}
+pub trait CodecValueAccessRefMut: SimpleValueAccessRefMut + ContainerValueAccessRefMut {}
+impl<T: SimpleValueAccessRefMut + ContainerValueAccessRefMut> CodecValueAccessRefMut for T {}
 impl<T: CodecSimpleSubValueRefMut> SimpleValueAccessRefMut for T {}
 
 /// Access simple (non-container) variants of a value by ownership.
@@ -533,9 +505,7 @@ impl<T: CodecSimpleSubValueInto> SimpleValueAccessInto for T {}
 /// Access container (vec/map) variants of a value by ownership.
 pub trait ContainerValueAccessInto: CodecContainerSubValueInto {
     /// Consume self and return a vec if Self is a vec
-    fn into_vec(
-        self,
-    ) -> Option<Vec<<Self::InnerValue as InnerCodecValue>::Inner>> {
+    fn into_vec(self) -> Option<Vec<<Self::InnerValue as InnerCodecValue>::Inner>> {
         if let ContainerValue::Vec(v) = self.into_container()? {
             Some(v)
         } else {
@@ -583,13 +553,7 @@ impl<T: CodecContainerSubValueInto> ContainerValueAccessInto for T {}
 /// Prefer bounding on this trait when you need to consume all value variants.
 /// Both [`SimpleValueAccessInto`] and [`ContainerValueAccessInto`] are available
 /// on any type that implements this trait.
-pub trait ValueAccessInto:
-    SimpleValueAccessInto + ContainerValueAccessInto
-{
-}
+pub trait ValueAccessInto: SimpleValueAccessInto + ContainerValueAccessInto {}
 
 // Blanket impl: everything that satisfies both sub-traits gets the master trait for free.
-impl<T: SimpleValueAccessInto + ContainerValueAccessInto> ValueAccessInto
-    for T
-{
-}
+impl<T: SimpleValueAccessInto + ContainerValueAccessInto> ValueAccessInto for T {}

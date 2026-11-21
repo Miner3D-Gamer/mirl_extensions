@@ -7,12 +7,6 @@ pub use text_position::*;
 pub const trait StringExtensions {
     /// Checks if the string only contains numbers
     fn is_number(&self) -> bool;
-    /// Pads the string on the right
-    fn rjust(&self, length: usize, fillchar: Option<char>) -> String;
-    /// Pads the string on the left
-    fn ljust(&self, length: usize, fillchar: Option<char>) -> String;
-    /// Pads the string to be in the middle
-    fn center(&self, length: usize, fillchar: Option<char>) -> String;
     /// Converts '\t' into '    '
     fn expand_tabs(&self) -> String;
     // fn extract_file_name(&self) -> String;
@@ -45,42 +39,65 @@ pub const trait StringExtensions {
     /// Reverse the string character order and return the result
     fn reversed(&self) -> String;
     /// Count how many characters the string has
-    fn length(&self) -> usize;
+    fn char_count(&self) -> usize;
     /// Split the string at the first dot
     fn split_file_name(&self) -> Option<(&str, &str)>;
 }
 
-impl StringExtensions for str {
-    fn length(&self) -> usize {
-        self.chars().count()
+/// More functionality for strings
+pub const trait StringPadding {
+    /// Pads the string on the right
+    fn rjust(&self, length: usize) -> String{
+        self.rjust_with(length, ' ')
     }
-    fn is_number(&self) -> bool {
-        self.chars().all(char::is_numeric)
+    /// Pads the string on the left
+    fn ljust(&self, length: usize) -> String{
+        self.ljust_with(length, ' ')
+    }
+    /// Pads the string to be in the middle
+    fn center(&self, length: usize) -> String{
+        self.center_with(length, ' ')
     }
 
-    fn rjust(&self, length: usize, fillchar: Option<char>) -> String {
+    
+    /// Pads the string on the right
+    fn rjust_with(&self, length: usize, fill_char: char) -> String;
+    /// Pads the string on the left
+    fn ljust_with(&self, length: usize, fill_char: char) -> String;
+    /// Pads the string to be in the middle
+    fn center_with(&self, length: usize, fill_char: char) -> String;
+}
+
+impl StringPadding for str {
+    fn rjust_with(&self, length: usize, fill: char) -> String {
         let pad = length.saturating_sub(self.len());
-        let fill = fillchar.unwrap_or(' ');
         format!("{}{}", fill.to_string().repeat(pad), self)
     }
 
-    fn ljust(&self, length: usize, fillchar: Option<char>) -> String {
+    fn ljust_with(&self, length: usize, fill: char) -> String {
         let pad = length.saturating_sub(self.len());
-        let fill = fillchar.unwrap_or(' ');
         format!("{}{}", self, fill.to_string().repeat(pad))
     }
 
-    fn center(&self, length: usize, fillchar: Option<char>) -> String {
+    fn center_with(&self, length: usize, fill: char) -> String {
         let pad = length.saturating_sub(self.len());
         let left_pad = pad / 2;
         let right_pad = pad - left_pad;
-        let fill = fillchar.unwrap_or(' ');
         format!(
             "{}{}{}",
             fill.to_string().repeat(left_pad),
             self,
             fill.to_string().repeat(right_pad)
         )
+    }
+}
+
+impl StringExtensions for str {
+    fn char_count(&self) -> usize {
+        self.chars().count()
+    }
+    fn is_number(&self) -> bool {
+        self.chars().all(char::is_numeric)
     }
     fn expand_tabs(&self) -> String {
         self.replace('\t', "    ")

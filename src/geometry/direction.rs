@@ -1,6 +1,6 @@
-use mirl_extensions_math::Numbers128;
+use mirl_extensions_math::Numbers2Pow3;
 
-const impl<T: [const] Numbers128 + [const] crate::UpperBounded> ShapeDirectionType for T {
+const impl<T: [const] Numbers2Pow3 + [const] crate::UpperBounded> ShapeDirectionType for T {
     default fn bottom_direction() -> Self {
         Self::num_5()
     }

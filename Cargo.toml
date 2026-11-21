@@ -2,7 +2,11 @@
 name = "mirl_extensions"
 version = "0.0.0-alpha"
 edition = "2024"
-repository.workspace = true
+repository = "https://github.com/Miner3D-Gamer/mirl_extensions"
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+maintenance.workspace = true
 
 [features]
 default = ["std"]
@@ -56,7 +60,10 @@ mirl_values = [
     "mirl_extensions_conversion/mirl_values",
 ]
 mirl_collections = ["dep:mirl_collections", "mirl_graphics?/mirl_collections"]
-mirl_graphics = ["dep:mirl_graphics", "mirl_extensions_conversion/mirl_graphics"]
+mirl_graphics = [
+    "dep:mirl_graphics",
+    "mirl_extensions_conversion/mirl_graphics",
+]
 mirl_input = ["dep:mirl_input"]
 mirl_geometry = ["dep:mirl_geometry_core"]
 ### Support for hashmap libs
@@ -107,6 +114,8 @@ _checking = [
     "mirl_collections",
     "mirl_geometry",
 ]
+f128 = ["mirl_extensions_math/f128"]
+f16 = ["mirl_extensions_math/f16"]
 fixed = ["mirl_extensions_math/fixed", "mirl_extensions_core/fixed"]
 [dependencies]
 ### Like a HashMap but concurrent
@@ -128,10 +137,13 @@ mirl_geometry_core = { version = "0.0.0-alpha", optional = true }
 mirl_graphics = { version = "0.0.0-alpha", optional = true }
 mirl_input = { version = "0.0.0-alpha", optional = true }
 mirl_values_core = { version = "0.0.0-alpha", optional = true }
-num-bigfloat = { version = "1.7", optional = true }
+num-bigfloat = { version = "1.7", optional = true, default-features = false, features = [
+    "std",
+    "num-traits",
+] }
 ### Number crates
 num-bigint = { version = "0.5", optional = true }
-num-traits = { version = "0.2.19", optional = true, no_default_features = true }
+num-traits = { version = "0.2.19", optional = true }
 ### Concurrency
 tokio = { version = "1.53", optional = true, features = ["sync"] }
 

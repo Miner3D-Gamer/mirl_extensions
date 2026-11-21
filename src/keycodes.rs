@@ -1,10 +1,10 @@
-use mirl_extensions_math::Numbers128;
+use mirl_extensions_math::Numbers2Pow5;
 
 /// Convert the given keycode into a number if possible
 pub const trait GetFunctionKeyFromKeycode {
     #[must_use]
     /// Get the number of the keycode if it is a number
-    fn get_function_key<T: Numbers128>(&self) -> Option<T>;
+    fn get_function_key<T: Numbers2Pow5>(&self) -> Option<T>;
     #[must_use]
     /// Check if the given keycode is a number
     fn is_function_key(&self) -> bool {
@@ -13,7 +13,7 @@ pub const trait GetFunctionKeyFromKeycode {
 }
 impl GetFunctionKeyFromKeycode for mirl_input::keyboard::KeyCode {
     /// Get the number of the keycode if it is a number
-    fn get_function_key<T: Numbers128>(&self) -> Option<T> {
+    fn get_function_key<T: Numbers2Pow5>(&self) -> Option<T> {
         Some(match self {
             Self::F1 => T::num_1(),
             Self::F2 => T::num_2(),
@@ -49,7 +49,7 @@ impl GetFunctionKeyFromKeycode for mirl_input::keyboard::KeyCode {
 pub const trait GetNumberFromKeycode {
     #[must_use]
     /// Get the number of the keycode if it is a number
-    fn get_number<T: [const] Numbers128>(&self) -> Option<T>;
+    fn get_number<T: [const] Numbers2Pow5>(&self) -> Option<T>;
     #[must_use]
     /// Check if the given keycode is a number
     fn is_number(&self) -> bool {
@@ -59,7 +59,7 @@ pub const trait GetNumberFromKeycode {
 
 const impl GetNumberFromKeycode for mirl_input::keyboard::KeyCode {
     /// Get the number of the keycode if it is a number
-    fn get_number<T: [const] Numbers128>(&self) -> Option<T> {
+    fn get_number<T: [const] Numbers2Pow5>(&self) -> Option<T> {
         Some(match self {
             Self::Num0 | Self::KeyPad0 => T::num_0(),
             Self::Num1 | Self::KeyPad1 => T::num_1(),

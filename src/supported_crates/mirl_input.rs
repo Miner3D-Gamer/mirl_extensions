@@ -1,5 +1,5 @@
 use crate::*;
-use mirl_input::mouse::{MouseButton, cursors::CursorResolution};
+use mirl_input::mouse::cursors::CursorResolution;
 
 /// Get the size of the given cursor resolution
 pub const trait GetCursorResolution {
@@ -19,15 +19,19 @@ const impl GetCursorResolution for CursorResolution {
     }
 }
 
+#[cfg(all(feature = "f128", feature = "f16"))]
+use mirl_input::mouse::MouseButton;
+#[cfg(all(feature = "f128", feature = "f16"))]
 /// Turn the mouse button into a logical number
 pub const trait MouseButtonToNumber {
     /// Turn the mouse button into a logical number
-    fn to_number<T: [const] UpperBounded + [const] Numbers128 + [const] One + [const] Zero>(
+    fn to_number<T: [const] UpperBounded + [const] Numbers2Pow6 + [const] One + [const] Zero>(
         &self,
     ) -> T;
 }
+#[cfg(all(feature = "f128", feature = "f16"))]
 const impl MouseButtonToNumber for MouseButton {
-    fn to_number<T: [const] UpperBounded + [const] Numbers128 + [const] One + [const] Zero>(
+    fn to_number<T: [const] UpperBounded + [const] Numbers2Pow6 + [const] One + [const] Zero>(
         &self,
     ) -> T {
         match self {

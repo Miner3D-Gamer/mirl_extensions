@@ -52,6 +52,7 @@ impl<T: Default> SetToDefault for T {
         *self = core::default::Default::default();
     }
 }
+#[cfg(feature = "std")]
 /// A trait for quickly printing to console by just calling [`.println_self()`](LogToConsole::println_self) instead of [`println!("{:?}", self)`](std::println)
 pub trait LogToConsole: core::fmt::Debug {
     /// Equivalent to println!("{self:?}")

@@ -18,7 +18,9 @@
 #![feature(const_trait_impl)]
 #![feature(const_option_ops)]
 #![feature(const_try)]
-#![cfg_attr(feature = "mirl_geometry", feature(const_cmp))]
+#![feature(const_clone)]
+#![feature(const_cmp)]
+#![allow(unused_features)]
 // #![feature(const_ref_cell)]
 
 // TODO: Implement a `.map(|x| x)` function for tuples
@@ -31,6 +33,7 @@ pub use mirl_extensions_math::*;
 // mod_and_pub_import!(conversion);
 mod_and_pub_import!(consts);
 #[cfg(feature = "mirl_input")]
+#[cfg(all(feature = "f128", feature = "f16"))]
 mod_and_pub_import!(keycodes);
 mod_and_pub_import!(builtin);
 #[cfg(feature = "mirl_geometry")]
